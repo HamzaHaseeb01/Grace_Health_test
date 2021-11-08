@@ -1,5 +1,19 @@
-version: '3.8'
-services: 
+version: '3.7'
+services:
+    mysqldb:
+        container_name: sqldb
+        image: mysql
+        env_file: .env
+        environment: 
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+            MYSQL_DATABASE: football_results
+        ports:
+            - '3306:3306'
+        networks:
+            - webnet
+        volumes:
+            - mysql:/var/lib/mysql/data
+            - mysql_config:/etc/mysql
     web:
         build:
             context: .
@@ -9,23 +23,16 @@ services:
             - .:/app/
             - /app/node_modules
         ports:
-            - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+            - '3000:3000'
+            # - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
         depends_on: 
             - mysqldb
         environment: 
             MYSQL_HOST: mysqldb
-    mysqldb:
-        image: mysql
-        env_file: ./.env
-        environment: 
-            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_DATABASE: $MYSQL_DATABASE
-        ports:
-            - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
-        volumes:
-            - mysql:/var/lib/mysql
-            - mysql_config:/etc/mysql
-
+        networks:
+            - webnet
+networks:
+  webnet:
 volumes:
     mysql:
     mysql_config:
