@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   data.init({
     Div: DataTypes.STRING,
+    
     Season: DataTypes.STRING,
     Date: DataTypes.DATE,
     HomeTeam: DataTypes.STRING,
